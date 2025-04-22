@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  database:
+    image: mysql:8.0 
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: wppassword
+      MYSQL_DATABASE: wpdb
+      MYSQL_USER: wpuser
+      MYSQL_PASSWORD: wppassword
+    volumes:
+      - wordpress_db_data:/var/lib/mysql
+
+  wordpress:
+    depends_on:
+      - database
+    image: wordpress:6.4.3
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      WORDPRESS_DB_HOST: database:3306
+      WORDPRESS_DB_USER: wpuser
+      WORDPRESS_DB_PASSWORD: wppassword
+      WORDPRESS_DB_NAME: wpdb
+    volumes:
+      - wordpress_data:/var/www/html
+
+volumes:
+  wordpress_db_data:
+  wordpress_data:
